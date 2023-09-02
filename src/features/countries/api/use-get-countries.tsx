@@ -6,7 +6,7 @@ import fuzzysort from 'fuzzysort'
 const COUNTRIES_API_URL = 'https://restcountries.com/v3.1/all' as const
 
 function useGetCountries(pagination: Pagination) {
-  const { search, page, sort } = pagination
+  const { page, rowsPerPage = 25, search, sort } = pagination
 
   const [loading, setLoading] = useState(false)
   const [countries, setCountries] = useState<Array<Country>>([])
@@ -44,9 +44,19 @@ function useGetCountries(pagination: Pagination) {
         )
 
     return results
-  }, [countries, search, page, sort])
+  }, [countries, search, sort])
 
-  return { loading, data: filteredCountries }
+  const paginatedCountries = useMemo(
+    () => filteredCountries.slice((page - 1) * rowsPerPage, page * rowsPerPage),
+    [filteredCountries, search, sort, page]
+  )
+
+  const totalPages = useMemo(
+    () => Math.ceil(filteredCountries.length / rowsPerPage),
+    [filteredCountries, rowsPerPage]
+  )
+
+  return { loading, data: paginatedCountries, totalPages }
 }
 
 export default useGetCountries

@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { CountryList } from './features/countries'
+import { CountryCatalog } from './features/countries'
 
 function App(): ReactElement {
   return (
@@ -7,7 +7,7 @@ function App(): ReactElement {
       <h1 className="text-2xl font-bold uppercase text-center">
         Countries Catalog
       </h1>
-      <CountryList />
+      <CountryCatalog />
     </div>
   )
 }

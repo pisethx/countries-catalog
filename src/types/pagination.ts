@@ -5,7 +5,8 @@ export enum SortDirection {
 }
 
 export interface Pagination {
-  search: string
   page: number
+  search: string
   sort: SortDirection
+  rowsPerPage?: number
 }
