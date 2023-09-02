@@ -5,6 +5,7 @@ import { SortDirection } from '../../../types'
 import { scrollToTop } from '../../../utils'
 
 const sortDirections = [
+  { label: 'Default', value: SortDirection.DEFAULT },
   { label: 'Ascending', value: SortDirection.ASCENDING },
   { label: 'Descending', value: SortDirection.DESCENDING }
 ] as const
@@ -15,7 +16,7 @@ function CountryList(): ReactElement {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [sortDirection, setSortDirection] = useState<SortDirection>(
-    SortDirection.ASCENDING
+    SortDirection.DEFAULT
   )
   const { loading, data: countries } = useGetCountries({
     search,

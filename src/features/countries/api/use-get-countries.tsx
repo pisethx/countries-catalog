@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Country } from '../countries.types'
-import { fuzzyMatchRegExp } from '../../../utils'
-import { Pagination } from '../../../types'
+import { Pagination, SortDirection } from '../../../types'
+import fuzzysort from 'fuzzysort'
+
+const COUNTRIES_API_URL = 'https://restcountries.com/v3.1/all' as const
 
 function useGetCountries(pagination: Pagination) {
   const { search, page, sort } = pagination
@@ -11,7 +13,7 @@ function useGetCountries(pagination: Pagination) {
 
   const fetchCountries = async () => {
     setLoading(true)
-    await fetch('https://restcountries.com/v3.1/all')
+    await fetch(COUNTRIES_API_URL)
       .then((res) => res.json())
       .then((res) => setCountries(res))
       .catch((e) => alert(e))
@@ -27,16 +29,19 @@ function useGetCountries(pagination: Pagination) {
     if (search === '') {
       results = countries
     } else {
-      results = countries.filter((country) =>
-        fuzzyMatchRegExp(search, country.name.official)
-      )
+      results = fuzzysort
+        .go(search, countries, { key: 'name.official' })
+        .map((result) => result.obj)
     }
 
-    results = results.sort(
-      (a, b) =>
-        (sort === 'ASC' ? 1 : -1) *
-        a.name.official.localeCompare(b.name.official)
-    )
+    if (sort !== SortDirection.DEFAULT)
+      results = results
+        .slice()
+        .sort(
+          (a, b) =>
+            (sort === SortDirection.ASCENDING ? 1 : -1) *
+            a.name.official.localeCompare(b.name.official)
+        )
 
     return results
   }, [countries, search, page, sort])
