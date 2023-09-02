@@ -1,4 +1,4 @@
-name: UI CI
+name: CI
 
 on:
   pull_request:
@@ -41,3 +41,16 @@ jobs:
           node-version: '18'
       - run: yarn
       - run: yarn test
+  deploy:
+    needs: test
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
