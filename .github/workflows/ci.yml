@@ -46,7 +46,7 @@ jobs:
           node-version: '18'
       - run: yarn
       - run: yarn build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-pages-artifact@v1
         with:
           name: github-pages
           path: ./dist
