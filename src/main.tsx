@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/countries-catalog/">
       <Routes>
         <Route path="/" element={<App />} />
         <Route
