@@ -1,7 +1,12 @@
 import { ReactElement } from 'react'
 import { Country, Idd, Name } from '../countries.types'
 
-function CountryCard({ country }: { country: Country }): ReactElement {
+interface CountryCardProps {
+  country: Country
+  onClick: () => void
+}
+
+function CountryCard({ country, onClick }: CountryCardProps): ReactElement {
   const formatNativeName = (nativeName?: Name['nativeName']) => {
     if (nativeName == null) return '-'
 
@@ -25,13 +30,16 @@ function CountryCard({ country }: { country: Country }): ReactElement {
     )
   }
   return (
-    <div className="card card-compact bg-base-100 shadow-lg">
+    <div
+      className="card card-compact bg-base-100 shadow-lg cursor-pointer transition hover:-translate-y-2"
+      onClick={onClick}
+    >
       <figure>
         <div className="aspect-[16/9] h-full w-full bg-gray-200">
           <img
             className="object-cover h-full w-full"
             src={country.flags.png}
-            alt={country.name.official}
+            alt={country.flags.alt ?? country.name.official}
           />
         </div>
       </figure>
