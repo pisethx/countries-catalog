@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useGetCountries } from '../api'
 import CountryCard from './CountryCard'
 import { SelectOption, SortDirection } from '../../../types'
@@ -62,6 +62,7 @@ function CountryCatalog(): ReactElement {
                 key={country.name.official}
                 country={country}
                 onClick={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   ;(window as any).displayedCountry.showModal()
                   setDisplayedCountry(country)
                 }}
