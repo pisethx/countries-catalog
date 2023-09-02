@@ -10,32 +10,43 @@ function CountryCard({ country }: { country: Country }): ReactElement {
       .join(', ')
   }
   const formatCallingCodes = (idd: Idd) => {
-    return idd.suffixes
-      ? idd.suffixes.map((suffix) => idd.root + suffix).join(' ')
-      : idd.root
+    if (idd.suffixes == null || idd.suffixes.length === 0) return '-'
+
+    const nDisplayedCallingCodes = 5
+
+    return (
+      idd.suffixes
+        .slice(0, nDisplayedCallingCodes)
+        .map((suffix) => idd.root + suffix)
+        .join(' ') +
+      (idd.suffixes.length > nDisplayedCallingCodes
+        ? ` (and ${idd.suffixes.length - nDisplayedCallingCodes} more)`
+        : '')
+    )
   }
   return (
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
-      <img
-        className="rounded-t-lg aspect-[16/9] w-full object-cover"
-        src={country.flags.png}
-        alt=""
-      />
+    <div className="card card-compact bg-base-100 shadow-lg">
+      <figure>
+        <div className="aspect-[16/9] h-full w-full bg-gray-200">
+          <img
+            className="object-cover h-full w-full"
+            src={country.flags.png}
+            alt={country.name.official}
+          />
+        </div>
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title text-gray-700">{country.name.official}</h2>
 
-      <div className="p-3">
-        <span className="text-base font-bold tracking-tight text-gray-900 ">
-          {country.name.official}
-        </span>
-
-        <ol className="text-xs text-gray-600 my-2">
+        <ol className="text-xs text-gray-600">
           {[
             { label: 'CCA2', value: country.cca2 },
             { label: 'CCA3', value: country.cca3 },
             {
-              label: 'NativeName',
+              label: 'Native name',
               value: formatNativeName(country.name.nativeName)
             },
-            { label: 'CallingCode', value: formatCallingCodes(country.idd) }
+            { label: 'Calling codes', value: formatCallingCodes(country.idd) }
           ].map(({ label, value }) => (
             <li key={label} className="mb-1">
               <span className="font-medium">{label}: </span>
