@@ -16,7 +16,7 @@ Template for vite, React + tailwindcss + TypeScript projects with some tools pre
   - [tailwindcss forms plugin](https://tailwindcss-forms.vercel.app/)
 - [TypeScript 4.9.5](https://www.typescriptlang.org/)
 - [vite 4](https://vitejs.dev/)
-- [vitetest](https://vitest.dev/)
+- [vitest](https://vitest.dev/)
 
 ### Tools
 

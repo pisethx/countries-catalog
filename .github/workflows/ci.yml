@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   lint:
     runs-on: ubuntu-22.04
@@ -19,20 +24,9 @@ jobs:
           node-version: '18'
       - run: yarn
       - run: yarn lint
-  build:
-    runs-on: ubuntu-22.04
-    needs: lint
-    name: Build
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: yarn
-      - run: yarn build
   test:
     runs-on: ubuntu-22.04
-    needs: build
+    needs: lint
     name: Test
     steps:
       - uses: actions/checkout@v3
@@ -41,8 +35,20 @@ jobs:
           node-version: '18'
       - run: yarn
       - run: yarn test
-  deploy:
+  build:
+    runs-on: ubuntu-22.04
     needs: test
+    name: Build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: yarn
+      - run: yarn build
+  deploy:
+    needs: build
+    name: Deploy
     permissions:
       pages: write
       id-token: write
@@ -51,6 +57,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-22.04
     steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
